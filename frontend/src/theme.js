@@ -9,8 +9,8 @@ const theme = createTheme({
     },
 
     background: {
-      default: "#0f172a", // deep navy background
-      paper: "#111827",   // card/sidebar background
+      default: "#0D1117", // deep navy background
+      paper: "#161822",   // card/sidebar background
     },
 
     text: {
@@ -23,10 +23,12 @@ const theme = createTheme({
 
   typography: {
     fontFamily: "Inter, system-ui, Arial",
+    
   },
 
   shape: {
     borderRadius: 10,
+  
   },
 });
 

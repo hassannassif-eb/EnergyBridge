@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
   Divider,
   Avatar,
   Menu,
@@ -29,14 +30,13 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import MapIcon from "@mui/icons-material/Map";
 import RouterIcon from "@mui/icons-material/Router";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import { useNavigate } from "react-router-dom";
 const drawerWidth = 260;
 
-
 const menuItems = [
-  { text: "Dashboard", icon: <DashboardIcon /> },
-  { text: "Customers", icon: <PeopleIcon /> },
+  { text: "Dashboard", icon: <DashboardIcon />,path:"/Dashboard" },
+  { text: "Clients", icon: <PeopleIcon />,path: "/clients" },
   { text: "Settings", icon: <SettingsIcon /> },
-
   { text: "Inventory", icon: <Inventory2Icon /> },
   { text: "Reports", icon: <AssessmentIcon /> },
   { text: "Employees", icon: <BadgeIcon /> },
@@ -47,9 +47,8 @@ const menuItems = [
   { text: "Tickets", icon: <ConfirmationNumberIcon /> },
 ];
 
-
-
 function Navbar() {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -65,49 +64,57 @@ function Navbar() {
     setAnchorEl(null);
   };
 
- const drawer = (
-  <Box sx={{ width: drawerWidth, mt: "64px" }}>
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" fontWeight="bold">
-        Energy Bridge ISP
-      </Typography>
-      <Typography variant="caption" color="gray">
-        Admin Panel
-      </Typography>
+  const drawerContent = (
+    <Box sx={{ width: drawerWidth }}>
+      {/* HEADER */}
+      <Box sx={{ p: 2, mt: 1 }}>
+        <Typography variant="h6" fontWeight="bold" color="white">
+          Energy Bridge ISP
+        </Typography>
+        <Typography variant="caption" color="gray">
+          Admin Panel
+        </Typography>
+      </Box>
+
+      <Divider sx={{ borderColor: "#1f2937" }} />
+
+      {/* MENU */}
+      <List>
+       {menuItems.map((item) => (
+  <ListItem key={item.text} disablePadding>
+    <ListItemButton
+      onClick={() => navigate(item.path)}
+      sx={{
+        borderRadius: 2,
+        mx: 1,
+        color: "white",
+        "&:hover": {
+          backgroundColor: "#1f2937",
+        },
+      }}
+    >
+      <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
+        {item.icon}
+      </ListItemIcon>
+      <ListItemText primary={item.text} />
+    </ListItemButton>
+  </ListItem>
+))}
+      </List>
     </Box>
-
-    <Divider />
-
-    <List>
-      {menuItems.map((item) => (
-<ListItem
-  button
-  sx={{
-    borderRadius: 2,
-    mx: 1,
-    "&:hover": {
-      backgroundColor: "#1f2937",
-    },
-  }}
->          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.text} />
-        </ListItem>
-      ))}
-    </List>
-  </Box>
-);
+  );
 
   return (
     <Box sx={{ display: "flex" }}>
       {/* TOP BAR */}
       <AppBar
-  position="fixed"
-  sx={{
-    zIndex: 1201,
-    backgroundColor: "#111827",
-    borderBottom: "1px solid #1f2937",
-  }}
->
+        position="fixed"
+        sx={{
+          zIndex: 1201,
+          backgroundColor: "#161822",
+          borderBottom: "1px solid #1f2937",
+        }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -142,36 +149,40 @@ function Navbar() {
         </Toolbar>
       </AppBar>
 
-      {/* SIDEBAR */}
-      <Box component="nav">
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-           "& .MuiDrawer-paper": {
-  width: drawerWidth,
-  backgroundColor: "#111827",
-  borderRight: "1px solid #1f2937",
-},
-          }}
-        >
-          {drawer}
-        </Drawer>
+      {/* SIDEBAR MOBILE */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            backgroundColor: "#111827",
+            color: "white",
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
 
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": { width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+      {/* SIDEBAR DESKTOP */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            backgroundColor: "#111827",
+            color: "white",
+            borderRight: "1px solid #1f2937",
+          },
+        }}
+        open
+      >
+        {drawerContent}
+      </Drawer>
     </Box>
   );
 }
