@@ -7,10 +7,9 @@ import {
   IconButton,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListItemButton,
   Divider,
   Avatar,
   Menu,
@@ -31,11 +30,12 @@ import MapIcon from "@mui/icons-material/Map";
 import RouterIcon from "@mui/icons-material/Router";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { useNavigate } from "react-router-dom";
+
 const drawerWidth = 260;
 
 const menuItems = [
-  { text: "Dashboard", icon: <DashboardIcon />,path:"/Dashboard" },
-  { text: "Clients", icon: <PeopleIcon />,path: "/clients" },
+  { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  { text: "Clients", icon: <PeopleIcon />, path: "/clients" },
   { text: "Settings", icon: <SettingsIcon /> },
   { text: "Inventory", icon: <Inventory2Icon /> },
   { text: "Reports", icon: <AssessmentIcon /> },
@@ -43,79 +43,78 @@ const menuItems = [
   { text: "Roles & Permissions", icon: <SecurityIcon /> },
   { text: "Packages", icon: <LocalOfferIcon /> },
   { text: "Coverage Areas", icon: <MapIcon /> },
-  { text: "Routers & OLT", icon: <RouterIcon /> },
+  // { text: "Routers & OLT", icon: <RouterIcon /> },
   { text: "Tickets", icon: <ConfirmationNumberIcon /> },
 ];
 
 function Navbar() {
-  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+  
+const navigate=useNavigate();
   const drawerContent = (
-    <Box sx={{ width: drawerWidth }}>
+    <Box sx={{ width: drawerWidth,overflowX:"hidden" }}>
+      
       {/* HEADER */}
-      <Box sx={{ p: 2, mt: 1 }}>
-        <Typography variant="h6" fontWeight="bold" color="white">
+      <Box sx={{ p: 2, mt: 7 }}>
+        <Typography variant="h6" fontWeight="bold">
           Energy Bridge ISP
         </Typography>
-        <Typography variant="caption" color="gray">
+        <Typography variant="caption" color="text.secondary">
           Admin Panel
         </Typography>
       </Box>
 
-      <Divider sx={{ borderColor: "#1f2937" }} />
+      <Divider />
 
       {/* MENU */}
-      <List>
-       {menuItems.map((item) => (
-  <ListItem key={item.text} disablePadding>
-    <ListItemButton
-      onClick={() => navigate(item.path)}
-      sx={{
-        borderRadius: 2,
-        mx: 1,
-        color: "white",
-        "&:hover": {
-          backgroundColor: "#1f2937",
-        },
-      }}
-    >
-      <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
-        {item.icon}
-      </ListItemIcon>
-      <ListItemText primary={item.text} />
-    </ListItemButton>
-  </ListItem>
-))}
-      </List>
+     <List
+  sx={{
+    p: 0,
+    width: "100%",
+    overflowX: "hidden",
+  }}
+>
+  {menuItems.map((item, index) => (
+    <React.Fragment key={index}>
+      <ListItemButton
+        onClick={() => navigate(item.path)}
+       sx={{
+  borderRadius: 2,
+  px: 2,
+  py: 1,
+  width: "100%",
+  boxSizing: "border-box",
+}}
+      >
+        <ListItemIcon
+  sx={{
+    minWidth: 40,
+  }}
+>
+  {item.icon}
+</ListItemIcon>
+        <ListItemText primary={item.text} />
+      </ListItemButton>
+
+      <Divider />
+    </React.Fragment>
+  ))}
+</List>
     </Box>
   );
 
   return (
     <Box sx={{ display: "flex" }}>
+
       {/* TOP BAR */}
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: 1201,
-          backgroundColor: "#161822",
-          borderBottom: "1px solid #1f2937",
-        }}
-      >
-        <Toolbar>
+      <AppBar position="fixed" sx={{ zIndex: 1201 }}>
+        <Toolbar sx={{bgcolor: "background.paper"}}>
+
           <IconButton
             color="inherit"
             edge="start"
@@ -146,43 +145,42 @@ function Navbar() {
               Logout
             </MenuItem>
           </Menu>
+
         </Toolbar>
       </AppBar>
 
-      {/* SIDEBAR MOBILE */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          display: { xs: "block", sm: "none" },
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            backgroundColor: "#111827",
-            color: "white",
-          },
-        }}
-      >
+      {/* MOBILE DRAWER */}
+     <Drawer
+  variant="permanent"
+  sx={{
+    display: { xs: "none", sm: "block" },
+    flexShrink: 5,
+    "& .MuiDrawer-paper": {
+      width: drawerWidth,
+      boxSizing: "border-box",
+      overflowX: "hidden",
+    },
+  }}
+>
         {drawerContent}
       </Drawer>
 
-      {/* SIDEBAR DESKTOP */}
+      {/* DESKTOP DRAWER */}
       <Drawer
         variant="permanent"
         sx={{
+            
           display: { xs: "none", sm: "block" },
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            backgroundColor: "#111827",
-            color: "white",
-            borderRight: "1px solid #1f2937",
+            overflowX:"hidden",
           },
         }}
         open
       >
         {drawerContent}
       </Drawer>
+
     </Box>
   );
 }

@@ -6,6 +6,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/clients" element={<Clients />} />
       <Route path="/" element={<Dashboard />} />
+      
       {/* add more routes here */}
     </Routes>
   );

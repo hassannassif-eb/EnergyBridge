@@ -5,7 +5,8 @@ const theme = createTheme({
     mode: "dark",
 
     primary: {
-      main: "#4f46e5", // modern indigo (professional SaaS color)
+      main: "#1f2937", // modern indigo (professional SaaS color)
+     
     },
 
     background: {
@@ -15,7 +16,8 @@ const theme = createTheme({
 
     text: {
       primary: "#f8fafc",
-      secondary: "#94a3b8",
+      secondary: "#050e1b",
+      holder:"grey"
     },
 
     divider: "#1f2937",

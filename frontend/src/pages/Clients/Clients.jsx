@@ -1,24 +1,29 @@
 import { Box, Typography } from "@mui/material";
-import ClientTable from "../../components/Tables/ClientTable"
-export default function Clients() {
+import ClientTable from "../../components/Tables/ClientTable";
+
+ function Clients() {
   return (
     <Box
       sx={{
         p: 4,
-        bgcolor: "#0D1117",
+        bgcolor: "background.default",
         minHeight: "100vh",
       }}
     >
       <Typography
+      
         variant="h4"
-        color="white"
         textAlign="center"
         mb={4}
+        color="text.primary"
+        fontWeight={600}
       >
         Clients List
       </Typography>
 
-      <ClientTable />
+      <ClientTable  />
+      
     </Box>
   );
 }
+export default Clients;
