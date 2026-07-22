@@ -1,0 +1,104 @@
+
+<div class="login-screen" id="login-screen">
+<div class="login-card">
+<div class="login-logo">EB</div>
+<div class="login-title">EB IP Manager</div>
+<div class="login-sub"><p>© 2026 Energy Bridge.<br>All rights reserved.</p></div>
+<div class="setup-banner" id="setup-banner">
+<b>⚙️ First-time setup</b><br>Paste your Google Apps Script Web App URL.
+<div class="setup-row">
+<input type="text" id="api-url-input" placeholder="https://script.google.com/macros/s/.../exec">
+<button class="btn btn-primary" onclick="saveApiUrl()">Save</button>
+</div>
+</div>
+<div class="login-error" id="login-error"></div>
+<div class="login-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username" autocomplete="username"></div>
+<div class="login-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+<button class="login-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+<div style="text-align:center;margin-top:14px"><span onclick="forceShowSetup()" style="font-size:11px;color:var(--text3);cursor:pointer;text-decoration:underline">⚙️ Change API URL</span></div>
+</div>
+</div>
+
+<div id="no-access-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9000;flex-direction:column;align-items:center;justify-content:center;gap:20px;"><div style="font-size:48px">🔒</div><div style="font-size:22px;font-weight:700;color:var(--text)">No sections available</div><div style="font-size:14px;color:var(--text2);text-align:center;max-width:400px;line-height:1.6">Your account has no visible sections configured.<br>Please contact your administrator.</div><button class="btn btn-primary" onclick="doLogout()" style="margin-top:8px;font-size:14px;padding:10px 28px">&#128274; Sign Out</button></div>
+<div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
+<div id="sync-freeze-overlay"><div id="sync-freeze-spinner"></div><div id="sync-freeze-label">Syncing…</div></div>
+
+<div class="topbar" id="topbar" style="display:none">
+<div class="topbar-brand"><div class="topbar-logo">EB</div><span>IP Management System</span></div>
+<div class="topbar-right">
+
+<div style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:8px;"><button id="topbar-export-btn" onclick="exportToExcel()" title="Export to Excel" style="display:none;background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text2);font-size:11px;font-weight:600;padding:3px 10px;gap:4px;align-items:center;transition:all .15s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">⬇ Export</button><button id="topbar-refresh-btn" onclick="doManualRefresh()" title="Refresh all data" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:0 2px;line-height:1;display:inline-flex;align-items:center;transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">&#x21BB;</button><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Live</span></div>
+<div class="user-pill" onclick="confirmSignOut()"><span class="role-dot" id="role-dot"></span><span id="user-label">user</span><span style="color:var(--text3)">· Sign out</span></div>
+</div>
+</div>
+
+<div class="layout" id="app-layout" style="display:none">
+<div class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-label">Overview</div>
+<div class="nav-item active" data-page="dashboard" id="nav-dashboard"><span class="nav-icon">📊</span>Dashboard</div>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">Real IP Subnets</div>
+<div id="subnet-nav-items"></div>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">Internal (Fake IP)</div>
+<div id="internal-nav-items"></div>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">WAN</div>
+<div class="nav-item" data-page="wan" id="nav-wan"><span class="nav-icon">🔗</span>WAN Solutions<span class="nav-badge" id="badge-wan">0</span></div>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">Network Services</div>
+<div class="nav-item" data-page="vlan" id="nav-vlan">
+  <span class="nav-icon">🏷️</span>VLAN Tracking
+  <span class="nav-badge" id="badge-vlan">0</span>
+</div>
+<div class="nav-item" data-page="tunnels" id="nav-tunnels"><span class="nav-icon">🔁</span>IP Tunnels<span class="nav-badge" id="badge-tunnels">0</span></div>
+<div class="nav-item" data-page="vpn" id="nav-vpn"><span class="nav-icon">🔐</span>VPN<span class="nav-badge" id="badge-vpn">0</span></div>
+</div>
+<div class="sidebar-section">
+<div class="divider"></div>
+<div class="sidebar-label">Credentials</div>
+<div class="nav-item" data-page="credentials" id="nav-credentials"><span class="nav-icon">&#128273;</span>Credentials<span class="nav-badge" id="badge-credentials">0</span></div>
+</div>
+<div class="sidebar-section">
+
+<div class="divider"></div>
+<div class="sidebar-label">Tools</div>
+
+<div class="nav-item" data-page="clients" id="nav-clients">
+  <span class="nav-icon">👥</span>
+  Clients
+  <span class="nav-badge" id="badge-clients">0</span>
+</div>
+
+<div class="nav-item" data-page="search" id="nav-search">
+...
+</div>
+
+</div>
+</div>
+<div class="main" id="main-content"></div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+<div class="modal">
+<div class="modal-header"><span class="modal-title" id="modal-title">Assign</span><button class="modal-close" onclick="closeModal()">×</button></div>
+<div class="modal-body" id="modal-body"></div>
+<div class="modal-footer" id="modal-footer"></div>
+</div>
+</div>
+
+<div id="wan-popup" style="display:none;position:fixed;z-index:300;background:var(--bg2);border:1px solid rgba(188,140,255,0.4);border-radius:10px;padding:16px;min-width:340px;max-width:460px;box-shadow:0 12px 40px rgba(0,0,0,0.6);overflow:hidden;overscroll-behavior:contain;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+<span style="font-weight:700;font-size:14px;color:var(--purple)" id="wan-popup-title">WAN Details</span>
+<button onclick="document.getElementById('wan-popup').style.display='none';var m=document.getElementById('main-content');if(m){m.style.overflow='';m.style.touchAction='';if(m._wanWheelHandler)m.removeEventListener('wheel',m._wanWheelHandler);}" style="background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;">×</button>
+</div>
+<div id="wan-popup-body" style="overflow-y:auto;max-height:65vh;padding-right:4px;overscroll-behavior:contain;"></div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-icon">✅</span><span id="toast-msg">Saved</span></div>
+

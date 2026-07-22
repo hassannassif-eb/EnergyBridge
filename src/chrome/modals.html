@@ -1,0 +1,17 @@
+<div class="modal-overlay" id="modal-overlay">
+<div class="modal">
+<div class="modal-header"><span class="modal-title" id="modal-title">Assign</span><button class="modal-close" onclick="closeModal()">×</button></div>
+<div class="modal-body" id="modal-body"></div>
+<div class="modal-footer" id="modal-footer"></div>
+</div>
+</div>
+
+<div id="wan-popup" style="display:none;position:fixed;z-index:300;background:var(--bg2);border:1px solid rgba(188,140,255,0.4);border-radius:10px;padding:16px;min-width:340px;max-width:460px;box-shadow:0 12px 40px rgba(0,0,0,0.6);overflow:hidden;overscroll-behavior:contain;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+<span style="font-weight:700;font-size:14px;color:var(--purple)" id="wan-popup-title">WAN Details</span>
+<button onclick="document.getElementById('wan-popup').style.display='none';var m=document.getElementById('main-content');if(m){m.style.overflow='';m.style.touchAction='';if(m._wanWheelHandler)m.removeEventListener('wheel',m._wanWheelHandler);}" style="background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;">×</button>
+</div>
+<div id="wan-popup-body" style="overflow-y:auto;max-height:65vh;padding-right:4px;overscroll-behavior:contain;"></div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-icon">✅</span><span id="toast-msg">Saved</span></div>

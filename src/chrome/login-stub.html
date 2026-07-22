@@ -1,0 +1,19 @@
+<div class="login-screen" id="login-screen">
+<div class="login-card">
+<div class="login-logo">EB</div>
+<div class="login-title">EB IP Manager</div>
+<div class="login-sub"><p>© 2026 Energy Bridge.<br>All rights reserved.</p></div>
+<div class="setup-banner" id="setup-banner">
+<b>⚙️ First-time setup</b><br>Paste your Google Apps Script Web App URL.
+<div class="setup-row">
+<input type="text" id="api-url-input" placeholder="https://script.google.com/macros/s/.../exec">
+<button class="btn btn-primary" onclick="saveApiUrl()">Save</button>
+</div>
+</div>
+<div class="login-error" id="login-error"></div>
+<div class="login-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username" autocomplete="username"></div>
+<div class="login-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+<button class="login-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+<div style="text-align:center;margin-top:14px"><span onclick="forceShowSetup()" style="font-size:11px;color:var(--text3);cursor:pointer;text-decoration:underline">⚙️ Change API URL</span></div>
+</div>
+</div>

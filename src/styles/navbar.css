@@ -1,0 +1,549 @@
+/* =========================
+   GLOBAL LAYOUT
+========================= */
+
+.layout {
+    display:flex;
+}
+
+
+/* =========================
+   TOP NAVBAR
+========================= */
+
+.custom-navbar {
+
+    background:transparent !important;
+
+    box-shadow:none !important;
+
+    z-index:1201 !important;
+
+}
+
+
+
+.navbar-toolbar {
+
+    height:64px !important;
+
+    min-height:64px !important;
+
+    padding:0 22px !important;
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #161b22,
+        #1c2128
+    );
+
+
+    border-bottom:
+
+    1px solid #30363d;
+
+
+}
+
+
+
+
+
+/* =========================
+   PAGE TITLE
+========================= */
+
+
+.navbar-title {
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+
+
+.navbar-title p {
+
+
+    margin:0 !important;
+
+
+    font-size:15px !important;
+
+
+    font-weight:600 !important;
+
+
+    letter-spacing:.2px;
+
+
+    color:#e6edf3;
+
+
+}
+
+
+
+.navbar-title span {
+
+
+    margin-top:2px;
+
+
+    font-size:11px;
+
+
+    color:#8b949e;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   USER SECTION
+========================= */
+
+
+.user-button {
+
+
+    padding:4px 8px !important;
+
+
+    border-radius:10px !important;
+
+
+}
+
+
+
+.user-button:hover {
+
+
+    background:rgba(255,255,255,.05) !important;
+
+
+}
+
+
+
+.user-avatar {
+
+
+    width:34px !important;
+
+
+    height:34px !important;
+
+
+    font-size:14px !important;
+
+
+    font-weight:700 !important;
+
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #00b4d8,
+        #0077b6
+    ) !important;
+
+
+}
+
+
+
+
+
+.user-info {
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    margin-left:3px;
+
+
+    line-height:15px;
+
+
+}
+
+
+
+.user-info strong {
+
+
+    font-size:13px;
+
+
+    font-weight:600;
+
+
+    color:#e6edf3;
+
+
+}
+
+
+
+.user-info small {
+
+
+    font-size:11px;
+
+
+    color:#8b949e;
+
+
+}
+
+
+
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+
+.sidebar-container {
+
+
+    width:260px;
+
+
+    height:100%;
+
+
+    padding:18px 12px;
+
+
+    box-sizing:border-box;
+
+
+
+    background:
+
+    linear-gradient(
+        180deg,
+        #161b22,
+        #0d1117
+    );
+
+
+
+}
+
+
+
+
+
+/* BRAND */
+
+
+.brand-box {
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    padding:8px 10px;
+
+
+}
+
+
+
+.brand-logo {
+
+
+    width:40px;
+
+
+    height:40px;
+
+
+    border-radius:12px;
+
+
+    font-size:17px;
+top:20%;
+
+}
+
+
+
+
+
+.brand-box h3 {
+
+
+    margin:0;
+
+
+    font-size:15px;
+
+
+    font-weight:700;
+
+
+    color:#e6edf3;
+
+
+}
+
+
+
+.brand-box span {
+
+
+    display:block;
+
+
+    margin-top:2px;
+
+
+    font-size:11px;
+
+
+    color:#8b949e;
+
+
+}
+
+
+
+
+
+.sidebar-divider {
+
+
+    margin:16px 0 !important;
+
+
+    border-color:#30363d !important;
+
+
+}
+
+
+
+
+
+
+/* =========================
+   MENU
+========================= */
+
+
+.menu-list  {
+
+ color: rgb(105, 216, 247) !important;
+    padding:0 !important;
+   
+
+
+}
+
+
+
+.menu-button {
+
+
+    min-height:42px !important;
+
+color: white;
+    padding:0 12px !important;
+gap:10px;
+
+    top:10%;
+
+
+    border-radius:10px !important;
+
+
+}
+
+
+
+.menu-button .MuiListItemText-primary {
+
+
+    font-size:13px !important;
+
+
+    font-weight:500;
+
+
+}
+
+
+
+.menu-button:hover {
+
+ background-color: rgb(72, 75, 97) !important;
+  
+
+
+}
+
+
+
+.menu-icon {
+
+
+    min-width:36px !important;
+ color: rgb(105, 216, 247) !important;
+}
+
+
+
+.menu-icon svg {
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+.sidebar-footer {
+
+
+    margin-top:auto;
+
+
+    padding:12px;
+
+
+}
+
+
+
+.sidebar-footer span {
+
+
+    font-size:11px;
+
+
+    color:#6e7681;
+
+
+}
+
+
+
+
+
+
+/* =========================
+   DRAWERS
+========================= */
+
+
+.desktop-sidebar .MuiDrawer-paper {
+
+
+    width:260px;
+
+
+    border:none !important;
+
+
+    background:#161b22;
+
+
+}
+
+
+
+.mobile-sidebar .MuiDrawer-paper {
+
+
+    width:260px;
+
+
+    background:#161b22;
+
+
+}
+
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+.mobile-button {
+
+
+    display:none !important;
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+.mobile-button {
+
+    display:flex !important;
+
+}
+
+
+.user-info {
+
+    display:none;
+
+}
+
+
+.desktop-sidebar {
+
+    display:none !important;
+
+}
+
+
+}

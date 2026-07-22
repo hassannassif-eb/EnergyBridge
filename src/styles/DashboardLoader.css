@@ -1,0 +1,152 @@
+.dashboard-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+   
+}
+.dashboard-loading-blur{
+    filter: blur(6px);
+    transform: scale(1.01);
+    transition: filter .3s ease;
+}
+.loader-box {
+    width: 360px;
+    height: 220px;
+    border-radius: 24px;
+    background:
+        linear-gradient(145deg,
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.45),
+        inset 0 0 40px rgba(0,255,255,.05);
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 35px 35px;
+}
+
+.loader-chart {
+    position: absolute;
+    inset: 35px 20px;
+}
+
+.loader-chart svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-line {
+    fill: none;
+    stroke: #00eaff;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: chartMove 2.2s linear infinite;
+}
+
+.chart-fill {
+    fill: url(#gradient);
+    opacity: .18;
+}
+
+.loader-dot {
+    fill: #fff;
+    filter: drop-shadow(0 0 8px #00eaff);
+    animation: pulse 2.0s infinite;
+}
+
+.loader-pulse {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #00eaff;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow:
+        0 0 20px #00eaff,
+        0 0 50px #00eaff;
+    animation: core 1.8s infinite ;
+}
+
+@keyframes chartMove {
+    0% {
+        stroke-dashoffset: 500;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes pulse {
+    0%,100% {
+        r: 4;
+    }
+    50% {
+        r: 8;
+    }
+}
+
+@keyframes core {
+    0% {
+        transform: translate(-50%,-50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%,-50%) scale(5);
+        opacity: 0;
+    }
+}
+#main-content.loader-blur {
+
+    filter: blur(12px);
+    opacity: .45;
+    transform: scale(1.02);
+
+    transition:
+        filter 1.5s ease,
+        opacity 1.5s ease,
+        transform 1.5s ease;
+}
+/* Real IP subnet active */
+.nav-sub.active[data-page="subnet"]{
+    background: rgba(0,180,216,0.15);
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    font-weight:600;
+}
+
+.nav-sub.active[data-page="subnet"] .nav-badge{
+    background:var(--accent);
+    color:#fff;
+}
+
+
+/* Fake/Internal IP subnet active */
+.nav-sub.active[data-page="internal"]{
+    background: rgba(255,165,0,0.15);
+    color: #ff9800;
+    border-left:3px solid #ff9800;
+    font-weight:600;
+}
+
+.nav-sub.active[data-page="internal"] .nav-badge{
+    background:#ff9800;
+    color:#fff;
+}

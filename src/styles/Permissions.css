@@ -1,0 +1,787 @@
+/* PAGE */
+
+.permissions-page {
+
+    width:100%;
+
+    min-height:100vh;
+
+    padding:25px 30px;
+
+    box-sizing:border-box;
+
+
+    background:
+    radial-gradient(
+        circle at top right,
+        rgba(25,118,210,0.20),
+        transparent 35%
+    ),
+    linear-gradient(
+        180deg,
+        #07111f,
+        #020617
+    );
+
+
+    color:white;
+
+    overflow-x:hidden;
+
+}
+
+
+
+/* HEADER */
+
+
+.permissions-header {
+
+    width:100%;
+
+    margin-bottom:20px;
+
+}
+
+
+.permissions-header h2 {
+
+    font-size:34px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    margin:0;
+
+    color:#ffffff;
+
+}
+
+
+
+.permissions-header p {
+
+    color:#94a3b8;
+
+    margin-top:6px;
+
+}
+
+
+
+/* BUTTON */
+
+
+.energy-button {
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    ) !important;
+
+
+    color:white !important;
+
+    border-radius:12px !important;
+
+    text-transform:none !important;
+
+    font-weight:600 !important;
+
+
+    padding:11px 24px !important;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(37,99,235,.35);
+
+
+    transition:.3s;
+
+
+}
+
+
+.energy-button:hover {
+
+
+    transform:translateY(-3px);
+
+
+    box-shadow:
+
+    0 15px 35px rgba(56,189,248,.45);
+
+
+}
+
+
+
+/* FILTER */
+
+
+.filters-container {
+
+    width:100%;
+
+    display:grid !important;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap:25px;
+
+    margin-bottom:20px;
+
+    padding:22px;
+
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(15,23,42,.95),
+        rgba(2,6,23,.95)
+    );
+
+
+    border-radius:20px;
+
+
+    border:
+    1px solid rgba(56,189,248,.15);
+
+}
+
+
+
+
+
+/* INPUTS */
+
+
+.permissions-page .MuiInputLabel-root {
+
+    color:#94a3b8 !important;
+
+}
+
+
+
+.permissions-page .MuiOutlinedInput-root {
+
+
+    color:white !important;
+
+
+    background:
+
+    rgba(255,255,255,.03);
+
+
+}
+
+
+
+.permissions-page
+.MuiOutlinedInput-notchedOutline {
+
+
+    border-color:#334155 !important;
+
+}
+
+
+
+.permissions-page
+.MuiOutlinedInput-root:hover
+.MuiOutlinedInput-notchedOutline {
+
+
+    border-color:#38bdf8 !important;
+
+
+}
+
+
+
+
+
+/* MAIN PANEL */
+
+
+.permissions-panel {
+
+
+    width:100%;
+
+
+    padding:20px !important;
+
+
+    margin:0 !important;
+
+
+    box-sizing:border-box;
+
+
+    background:
+
+    linear-gradient(
+        145deg,
+        #0f172a,
+        #020617
+    ) !important;
+
+
+
+    border-radius:22px !important;
+
+
+    border:
+
+    1px solid rgba(56,189,248,.15);
+
+
+
+    color:white !important;
+
+
+
+    box-shadow:
+
+    0 20px 50px rgba(0,0,0,.35);
+
+
+}
+
+
+
+
+
+.permissions-panel h5 {
+
+
+    font-size:23px;
+
+    margin:0;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+/* PERMISSION GRID */
+
+
+/* PERMISSION GRID */
+
+.permission-category-grid {
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3, minmax(280px,1fr));
+
+    gap:20px;
+
+    width:100%;
+
+}
+
+
+
+/* CATEGORY CARD */
+
+.permission-category {
+
+
+    padding:20px;
+
+
+    min-height:180px;
+
+
+    border-radius:18px;
+
+
+    background:
+
+    linear-gradient(
+        145deg,
+        rgba(30,41,59,.95),
+        rgba(15,23,42,.95)
+    );
+
+
+    border:
+
+    1px solid rgba(56,189,248,.15);
+
+
+    transition:.3s;
+
+
+    display:flex;
+
+    flex-direction:column;
+
+
+}
+
+
+
+.permission-category:hover {
+
+
+    border-color:#38bdf8;
+
+
+    box-shadow:
+
+    0 15px 40px rgba(56,189,248,.15);
+
+
+    transform:translateY(-4px);
+
+
+}
+
+
+
+
+/* CATEGORY TITLE */
+
+
+.permission-category h6 {
+
+
+    color:#38bdf8;
+
+
+    font-size:17px;
+
+
+    font-weight:700;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:8px;
+
+
+}
+
+
+
+
+/* PERMISSION LIST */
+
+
+.permission-category > div:last-child {
+
+
+    display:flex !important;
+
+
+    flex-direction:column;
+
+
+    gap:6px;
+
+
+}
+
+
+
+
+
+/* EACH CHECKBOX ROW */
+
+
+.permission-item {
+
+
+    width:100%;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    border-radius:10px;
+
+
+    padding:5px 8px;
+
+
+    transition:.25s;
+
+
+}
+
+
+
+.permission-item:hover {
+
+
+    background:
+
+    rgba(56,189,248,.08);
+
+
+}
+
+
+
+
+
+/* CHECKBOX ALIGNMENT */
+
+
+.permission-item
+.MuiFormControlLabel-root {
+
+
+    width:100%;
+
+
+    margin:0;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+}
+
+
+
+
+
+.permission-item
+.MuiCheckbox-root {
+
+
+    padding:6px !important;
+
+
+    margin-right:8px;
+
+
+}
+
+
+
+
+
+/* TEXT */
+
+
+.permission-label {
+
+
+    color:#e2e8f0;
+
+
+    font-size:14px !important;
+
+
+    font-weight:500;
+
+
+    white-space:nowrap;
+
+
+}
+
+
+
+
+
+/* CHECKED COLOR */
+
+
+.permissions-page
+.MuiCheckbox-root.Mui-checked {
+
+
+    color:#38bdf8 !important;
+
+
+}
+
+
+
+
+
+/* CHECKBOX HOVER */
+
+
+.permission-item:hover
+.MuiCheckbox-root {
+
+
+    color:#38bdf8;
+
+
+}
+.Dialog{
+   background: rgb(24, 109, 201) !important;
+}
+
+/* ADD ROLE MODAL */
+
+.add-role-dialog .MuiDialog-paper {
+
+    background:
+    linear-gradient(
+        145deg,
+        #0f4c81,
+        #020617
+    ) !important;
+
+
+    color:white !important;
+
+
+    border-radius:20px !important;
+
+
+    border:
+    1px solid rgba(56,189,248,.35);
+
+
+    box-shadow:
+
+    0 25px 60px rgba(0,0,0,.6);
+
+
+}
+
+
+
+/* TITLE */
+
+.add-role-dialog
+.MuiDialogTitle-root {
+
+    color:white !important;
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+
+
+/* CONTENT */
+
+.add-role-dialog
+.MuiDialogContent-root {
+
+    color:white;
+
+}
+
+
+
+/* INPUT LABEL */
+
+.add-role-dialog
+.MuiInputLabel-root {
+
+    color:#cbd5e1 !important;
+
+}
+
+
+
+/* TEXT FIELD */
+
+.add-role-dialog
+.MuiOutlinedInput-root {
+
+    color:white !important;
+
+
+    background:
+
+    rgba(255,255,255,.08);
+
+
+    border-radius:12px;
+
+}
+
+
+
+.add-role-dialog
+.MuiOutlinedInput-notchedOutline {
+
+    border-color:
+    rgba(255,255,255,.3) !important;
+
+}
+
+
+
+.add-role-dialog
+.MuiOutlinedInput-root:hover
+.MuiOutlinedInput-notchedOutline {
+
+    border-color:#38bdf8 !important;
+
+}
+
+
+
+/* BUTTONS */
+
+.add-role-dialog
+.MuiDialogActions-root {
+
+    padding:20px;
+
+}
+
+
+
+.add-role-dialog
+.MuiButton-root {
+
+    border-radius:10px;
+
+    text-transform:none;
+
+    font-weight:600;
+
+}
+
+
+
+/* CREATE BUTTON */
+
+.add-role-dialog
+.MuiButton-contained {
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    ) !important;
+
+
+    color:white !important;
+
+}
+.permission-select .MuiOutlinedInput-root {
+
+    height:55px;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    color:white;
+
+    border-radius:14px;
+
+}
+
+
+.permission-select .MuiInputLabel-root {
+
+    color:#94a3b8 !important;
+
+}
+
+
+.permission-select 
+.MuiOutlinedInput-notchedOutline {
+
+    border-color:
+    rgba(148,163,184,.35) !important;
+
+}
+
+
+.permission-select 
+.MuiOutlinedInput-root:hover
+.MuiOutlinedInput-notchedOutline {
+
+    border-color:#38bdf8 !important;
+
+}
+
+
+.permission-select 
+.MuiSelect-select {
+
+    color:white !important;
+
+    font-weight:500;
+
+}
+
+
+.permission-select 
+.MuiSvgIcon-root {
+
+    color:#38bdf8;
+
+}
+
+
+
+/* Dropdown menu */
+
+.MuiMenu-paper {
+
+    background:#0f172a !important;
+
+    color:white !important;
+
+    border-radius:14px !important;
+
+}
+
+
+.MuiMenuItem-root {
+
+    color:#e2e8f0 !important;
+
+}
+
+
+.MuiMenuItem-root:hover {
+
+    background:
+    rgba(56,189,248,.12) !important;
+
+}
+
+
+.MuiMenuItem-root.Mui-selected {
+
+    background:
+    rgba(37,99,235,.35) !important;
+
+}

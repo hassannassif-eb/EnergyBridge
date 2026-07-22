@@ -1,0 +1,15 @@
+#loading-overlay {
+  display: none;
+}
+
+#loading-overlay.show {
+  display: flex;
+}
+
+#setup-banner {
+  display: none;
+}
+
+#setup-banner.show {
+  display: block;
+}

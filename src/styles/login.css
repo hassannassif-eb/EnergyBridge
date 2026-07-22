@@ -1,0 +1,69 @@
+.eb-toast {
+  position:fixed;
+  top:30px;
+  right:30px;
+  z-index:99999;
+  background:#1b1d27;
+  color:#fff;
+  border:1px solid #FF3B3B;
+  padding:14px 20px;
+  border-radius:10px;
+  font-size:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  animation:toast-in .3s ease;
+}
+
+@keyframes toast-in {
+  from {
+    opacity:0;
+    transform:translateY(-20px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.login-loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,11,16,.82);
+  backdrop-filter: blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+
+.login-loader {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:15px;
+  color:#EDEDF2;
+  font-size:14px;
+}
+
+
+.loader-ring {
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,.15);
+  border-top-color:#FF3B3B;
+  animation:loginSpin .8s linear infinite;
+}
+
+
+@keyframes loginSpin {
+
+  from {
+    transform:rotate(0deg);
+  }
+
+  to {
+    transform:rotate(360deg);
+  }
+
+}
