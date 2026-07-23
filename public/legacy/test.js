@@ -2655,21 +2655,8 @@ function renderDashboard(){
     loadAllData();
 let totalA=0,totalF=0;const dspC={},clients={};
 Object.keys(db.subnets).forEach(s=>{(db.subnets[s]||[]).forEach(r=>{if(r.client_id){totalA++;clients[r.client_id]=r.client_name;if(r.dsp)dspC[r.dsp]=(dspC[r.dsp]||0)+1;}else totalF++;});});
-let intTotal = 0;
-let intA = 0;
+let intTotal=0,intA=0;Object.values(db.internalSubnets).forEach(d=>{intTotal+=d.length;intA+=d.filter(r=>r.client_id).length;});
 
-Object.values(db.internalSubnets || {}).forEach(rows => {
-
-    if(!Array.isArray(rows)) return;
-
-    intTotal += rows.length;
-
-    intA += rows.filter(r =>
-        r.client_id &&
-        String(r.client_id).trim() !== ""
-    ).length;
-
-});
 const dspRows = (db.dspList || [])
     .map(dsp => {
 
@@ -4168,170 +4155,327 @@ async function patchRealIpSubnet(req,res){
 }
 async function doAssign(sub, type, idx = null) {
 
-    console.log("doAssign:", { sub, type, idx });
+    console.log("doAssign:", {
+        sub,
+        type,
+        idx
+    });
+
 
     const startIp = v("f_start_ip").trim();
     const clientId = v("f_client_id").trim();
     const clientName = v("f_client_name").trim();
 
+
     if (!startIp || !clientId || !clientName) {
-        showToast("Start IP, Client ID and Name required", "error");
+        showToast(
+            "Start IP, Client ID and Name required",
+            "error"
+        );
         return;
     }
+
 
     if (!isValidIP(startIp)) {
-        showToast("Invalid IP address", "error");
+        showToast(
+            "Invalid IP address",
+            "error"
+        );
         return;
     }
 
+
     if (!isIpInSubnet(startIp, sub)) {
-        showToast(`${startIp} does not belong to ${sub}`, "error");
+        showToast(
+            `${startIp} does not belong to ${sub}`,
+            "error"
+        );
         return;
     }
+
+
 
     const fakeIp =
         type === "real"
-            ? (v("f_fake_ip").trim() || null)
-            : null;
+        ? (v("f_fake_ip").trim() || null)
+        : null;
+
+
 
     const vlanId =
         type === "real"
-            ? (v("f_vlan_id").trim() || null)
-            : null;
+        ? (v("f_vlan_id").trim() || null)
+        : null;
+
+
 
     const dspId =
         type === "real"
-            ? (Number(sel("f_dsp")) || null)
-            : null;
+        ? (Number(sel("f_dsp")) || null)
+        : null;
 
-    const token = sessionStorage.getItem("authToken");
+
+
+    const token =
+        sessionStorage.getItem("authToken");
+
+
 
     try {
 
-        const backendRows = await fetchRealIpSubnets();
 
-        console.table(
-            backendRows.map(r => ({
-                id: r.id,
-                block: r.real_ip_block
-            }))
-        );
+        /*
+          Find subnet backend row
+        */
 
-        let subnetRow = null;
+        const backendRows =
+            await fetchRealIpSubnets();
 
-        // If we already know the id, use it
-        if (idx !== null) {
-            subnetRow = backendRows.find(r => r.id === Number(idx));
-        }
 
-        // Otherwise locate the row by IP
+
+        const subnetRow =
+            backendRows.find(r =>
+                normalizeSubnet(
+                    r.real_ip_block.split("/")[0],
+                    Number(r.real_ip_block.split("/")[1])
+                )
+                ===
+                normalizeSubnet(
+                    sub.split("/")[0],
+                    Number(sub.split("/")[1])
+                )
+            );
+
+
+
         if (!subnetRow) {
-            subnetRow = backendRows.find(r => {
-                const [ip] = r.real_ip_block.split("/");
-                return ip === startIp;
-            });
-        }
 
-        if (!subnetRow) {
-            console.error("Row not found for IP:", startIp);
+            console.error(
+                "Subnet backend row missing",
+                sub,
+                backendRows
+            );
 
-            showToast("IP record not found", "error");
+            showToast(
+                "Subnet record not found",
+                "error"
+            );
+
             return;
         }
 
-        console.log("PATCH ROW:", subnetRow);
+
+
+        console.log(
+            "PATCH SUBNET ROW",
+            subnetRow
+        );
+
+
 
         const payload = {
 
-            real_ip_block: subnetRow.real_ip_block,
+            real_ip_block:
+                subnetRow.real_ip_block,
 
-            client_id: clientId,
 
-            client_name: clientName,
+            real_ip:
+                startIp,
 
-            fake_ip: fakeIp,
 
-            vlan_id: vlanId
-                ? Number(vlanId)
-                : null,
+            client_id:
+                clientId,
 
-            dsp_id: dspId,
 
-            wan: subnetRow.wan || null
+            client_name:
+                clientName,
+
+
+            fake_ip:
+                fakeIp,
+
+
+            vlan_id:
+                vlanId
+                ?
+                Number(vlanId)
+                :
+                null,
+
+
+            dsp_id:
+                dspId,
+
+
+            wan:
+                subnetRow.wan || null
+
         };
 
-        console.log("PATCH ID:", subnetRow.id);
-        console.log("PATCH BODY:", payload);
 
-        const response = await fetch(
-            `http://10.249.2.9/api/ip-manager/real-ip-subnets/${subnetRow.id}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            }
+
+        console.log(
+            "PATCH ID:",
+            subnetRow.id
         );
 
-        const text = await response.text();
+
+        console.log(
+            "PATCH BODY:",
+            payload
+        );
+
+
+
+        const response =
+            await fetch(
+
+                `http://10.249.2.9/api/ip-manager/real-ip-subnets/${subnetRow.id}`,
+
+                {
+                    method:"PATCH",
+
+                    headers:{
+
+                        "Authorization":
+                        `Bearer ${token}`,
+
+                        "Accept":
+                        "application/json",
+
+                        "Content-Type":
+                        "application/json"
+
+                    },
+
+                    body:
+                    JSON.stringify(payload)
+                }
+
+            );
+
+
+
+        const text =
+            await response.text();
+
+
 
         let result = {};
 
         try {
-            result = text ? JSON.parse(text) : {};
-        } catch {
-            throw new Error(text || "Invalid response");
+
+            result =
+                text
+                ?
+                JSON.parse(text)
+                :
+                {};
+
+        }
+        catch {
+
+            throw new Error(
+                text || "Invalid response"
+            );
+
         }
 
-        if (!response.ok || result.ok === false) {
+
+
+        if(!response.ok || result.ok === false){
+
             throw new Error(
                 result.error ||
                 result.message ||
                 "Patch failed"
             );
+
         }
 
-        // Reload
-        const realSubnets = await fetchRealIpSubnets();
+
+
+        /*
+          Reload
+        */
+
+        const realSubnets =
+            await fetchRealIpSubnets();
+
+
 
         db.subnets = {};
 
-        realSubnets.forEach(item => {
 
-            if (!item.real_ip_block) return;
 
-            const [ip, prefix] = item.real_ip_block.split("/");
+        realSubnets.forEach(item=>{
 
-            const key = normalizeSubnet(ip, Number(prefix));
+            if(!item.real_ip_block)
+                return;
 
-            if (!db.subnets[key]) {
+
+            const [
+                ip,
+                prefix
+            ] =
+            item.real_ip_block.split("/");
+
+
+            const key =
+                normalizeSubnet(
+                    ip,
+                    Number(prefix)
+                );
+
+
+            if(!db.subnets[key]){
                 db.subnets[key] = [];
             }
+
 
             db.subnets[key].push(item);
 
         });
 
-        REAL_SUBNETS = Object.keys(db.subnets);
+
+
+        REAL_SUBNETS =
+            Object.keys(db.subnets);
+
+
 
         buildSidebarNav();
+
         render();
+
         updateTopStats();
+
         closeModal();
 
-        showToast("IP updated successfully ✓", "success");
+
+
+        showToast(
+            "IP updated successfully ✓",
+            "success"
+        );
+
 
     }
-    catch (err) {
+    catch(err){
 
-        console.error("ASSIGN ERROR:", err);
+        console.error(
+            "ASSIGN ERROR:",
+            err
+        );
 
-        showToast(err.message, "error");
+
+        showToast(
+            err.message,
+            "error"
+        );
 
     }
+
 }
 
 // ============================================================
@@ -4530,23 +4674,13 @@ await deleteRowsFast(
 console.log(db.subnets["5.100.244.0/24"]);
 async function confirmDeleteRealSubnet(sub){
 
-    const token =
-        sessionStorage.getItem("authToken");
+    const rows = [
+        ...new Map(
+            (db.subnets[sub] || [])
+            .map(row => [row.id,row])
+        ).values()
+    ];
 
-    // db.subnets[sub] may hold the UI's client-generated placeholder rows
-    // (one per host IP, id:null — see renderSubnet) rather than the real
-    // backend records, so we can't delete from that. Fetch the real rows
-    // fresh and match them to this block by subnet, the same way doAssign
-    // does — this also correctly picks up every row that belongs to this
-    // subnet, whether it's just the one block-level row or several
-    // individually-assigned host rows.
-    const backendRows = await fetchRealIpSubnets();
-
-    const rows = backendRows.filter(r => {
-        if(!r.real_ip_block) return false;
-        const [ip, prefix] = r.real_ip_block.split("/");
-        return normalizeSubnet(ip, Number(prefix)) === sub;
-    });
 
     if(!rows.length){
         showToast("Subnet not found","error");
@@ -4555,10 +4689,14 @@ async function confirmDeleteRealSubnet(sub){
 
 
     if(!confirm(
-        `Delete ${sub} (${rows.length} record${rows.length===1?'':'s'})?`
+        `Delete ${sub} (${rows.length} IPs)?`
     )){
         return;
     }
+
+
+    const token =
+        sessionStorage.getItem("authToken");
 
 
     try{
@@ -4589,7 +4727,7 @@ async function confirmDeleteRealSubnet(sub){
 
         const failed =
             results.filter(
-                r => r.status === "rejected" || (r.value && !r.value.ok)
+                r => r.status === "rejected"
             );
 
 
@@ -4597,7 +4735,7 @@ async function confirmDeleteRealSubnet(sub){
 
             throw new Error(
                 failed.length+
-                " record(s) failed deleting"
+                " records failed deleting"
             );
 
         }
@@ -4639,86 +4777,222 @@ async function confirmDeleteRealSubnet(sub){
     }
 
 }
-// ============================================================
-// DELETE INTERNAL (FAKE) SUBNET
-// ============================================================
-async function confirmDeleteSubnet(sub) {
-    // 1. Ask for confirmation
-    if (!confirm(`Are you sure you want to completely remove the internal subnet ${sub}?`)) {
+async function confirmDeleteSubnet(sub){
+
+    const rows =
+        db.subnets[sub] || [];
+
+
+    if(!rows.length){
+
+        showToast(
+            "Subnet not found",
+            "error"
+        );
+
         return;
     }
 
-    const subnetData = db.internalSubnets[sub];
-    if (!subnetData || subnetData.length === 0) {
-        showToast("Subnet not found locally.", "error");
+
+    const assigned =
+        rows.filter(
+            r => r.client_id
+        ).length;
+
+
+
+    if(
+        assigned > 0 &&
+        !confirm(
+            `⚠️ This subnet has ${assigned} assigned IPs. Delete anyway?`
+        )
+    ){
         return;
     }
 
-    // 2. Warn if there are active assignments
-    const assignedCount = subnetData.filter(r => r.client_id).length;
-    if (assignedCount > 0) {
-        if (!confirm(`⚠️ Warning: There are ${assignedCount} active assignments in this subnet. Deleting it will wipe these assignments. Proceed?`)) {
-            return;
-        }
-    }
 
-    // 3. Extract the Subnet ID from the first mapped record
-    const subnetId = subnetData[0].id;
-    const token = sessionStorage.getItem("authToken");
-
-    if (!subnetId) {
-        showToast("Error: Missing Subnet ID for API request.", "error");
+    if(
+        assigned === 0 &&
+        !confirm(
+            `Delete subnet ${sub}?`
+        )
+    ){
         return;
     }
 
-    try {
-        if (typeof showLoading === 'function') showLoading(true);
 
-        // 4. Send DELETE request to the backend REST API
-        const response = await fetch(`http://10.249.2.9/api/ip-manager/internal-ip-subnets/${subnetId}`, {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
+
+    try{
+
+
+        const token =
+            sessionStorage.getItem("authToken");
+
+
+
+        /*
+        Delete every IP row
+        */
+
+        for(const row of rows){
+
+
+            const response =
+                await fetch(
+                    `http://10.249.2.9/api/ip-manager/internal-ip-subnets/${row.id}`,
+                    {
+                        method:"DELETE",
+
+                        headers:{
+                            "Accept":"application/json",
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
+                );
+
+
+
+            const text =
+                await response.text();
+
+
+            let result;
+
+
+            try{
+
+                result =
+                    JSON.parse(text);
+
             }
+            catch(e){
+
+                console.error(
+                    "DELETE RESPONSE:",
+                    text
+                );
+
+                throw new Error(
+                    "Invalid server response"
+                );
+
+            }
+
+
+
+            if(
+                !response.ok ||
+                result.ok === false
+            ){
+
+                throw new Error(
+                    result.error ||
+                    `Failed deleting ${row.real_ip}`
+                );
+
+            }
+
+
+            console.log(
+                "Deleted:",
+                row.real_ip
+            );
+
+        }
+
+
+
+        /*
+        Reload database from API
+        */
+
+        const realSubnets =
+            await fetchRealIpSubnets();
+
+
+
+        db.subnets = {};
+
+
+        realSubnets.forEach(item=>{
+
+            if(!db.subnets[item.real_ip_block]){
+
+             const [ip,prefix] =
+    item.real_ip_block.split('/');
+
+const key =
+    normalizeSubnet(
+        ip,
+        Number(prefix)
+    );
+
+if(!db.subnets[key]){
+    db.subnets[key]=[];
+}
+
+db.subnets[key].push(item);
+
+            }
+
+
+            db.subnets[item.real_ip_block]
+            .push(item);
+
         });
 
-        let result = {};
-        const text = await response.text();
-        if (text) {
-            try {
-                result = JSON.parse(text);
-            } catch (e) {
-                console.error("Parse error on delete response:", text);
-            }
+
+
+        REAL_SUBNETS =
+            Object.keys(db.subnets);
+
+
+
+        buildSidebarNav();
+
+
+
+        if(REAL_SUBNETS.length){
+
+            showPage(
+                'subnet',
+                REAL_SUBNETS[0]
+            );
+
+        }
+        else{
+
+            showPage(
+                'dashboard'
+            );
+
         }
 
-        if (!response.ok || result.ok === false) {
-            throw new Error(result.error || result.message || "Failed to delete subnet from the server");
-        }
 
-        // 5. Clean up local state
-        delete db.internalSubnets[sub];
-        localStorage.setItem("internalSubnetData", JSON.stringify(db.internalSubnets));
 
-        // 6. Refresh the UI and redirect to a fallback page
-        await loadAllData();
-        
-        const keys = Object.keys(db.internalSubnets);
-        if (keys.length > 0) {
-            showPage('internal', keys[0]);
-        } else {
-            showPage('internal', null);
-        }
+        showToast(
+            `Subnet ${sub} removed ✓`,
+            "success"
+        );
 
-        showToast(`Subnet ${sub} deleted successfully ✓`, "success");
 
-    } catch (err) {
-        console.error("DELETE SUBNET ERROR:", err);
-        showToast(err.message, "error");
-    } finally {
-        if (typeof showLoading === 'function') showLoading(false);
     }
+    catch(err){
+
+        console.error(
+            "DELETE SUBNET ERROR:",
+            err
+        );
+
+
+        showToast(
+            err.message,
+            "error"
+        );
+
+    }
+
 }
 
 // ============================================================
@@ -6777,76 +7051,28 @@ function unlockVlan(idx){
 
 // ── VLAN Modal ────────────────────────────────────────────────
 let _vlanEditIdx=-1;
-function ensureModalExists(){
 
-    if(
-        !document.getElementById('modal-title') ||
-        !document.getElementById('modal-body') ||
-        !document.getElementById('modal-footer') ||
-        !document.getElementById('modal-overlay')
-    ){
-
-        console.warn("Modal DOM missing, recreating");
-
-        const div = document.createElement("div");
-
-        div.innerHTML = `
-        <div id="modal-overlay" class="modal-overlay">
-            <div class="modal">
-                <div id="modal-title" class="modal-title"></div>
-                <div id="modal-body"></div>
-                <div id="modal-footer"></div>
-            </div>
-        </div>
-        `;
-
-        document.body.appendChild(div.firstElementChild);
-    }
-}
 async function openVlanModal(idx){
-
-    ensureModalExists();
-
-    // Make sure clients exist
-    if(
-        !db.clients ||
-        !Array.isArray(db.clients.data) ||
-        db.clients.data.length === 0
-    ){
-        await fetchClients();
-        console.log("CLIENT LIST:", db.clients);
-    }
+ if(!db.clients || db.clients.length===0){
+    await fetchClients();
+    console.log("CLIENT LIST:", db.clients);
+}
 
 
-    // Make sure DSP exists
-    if(
-        !Array.isArray(db.dspList) ||
-        db.dspList.length === 0
-    ){
-        await fetchDspProviders();
-    }
+if(!db.dspList || db.dspList.length===0){
+    await fetchDspProviders();
+}
 
 
-    // Safe edit detection
-    if(
-        idx !== null &&
-        idx !== undefined &&
-        Array.isArray(db.vlans) &&
-        db.vlans[idx]
-    ){
-        _vlanEditIdx = idx;
-    }
-    else{
-        _vlanEditIdx = -1;
-    }
+_vlanEditIdx = (idx!==null && idx!==undefined) ? idx : -1;
 
 
-    const isEdit = _vlanEditIdx >= 0;
+const isEdit = _vlanEditIdx >= 0;
 
 
-    const v = isEdit
-        ? db.vlans[_vlanEditIdx]
-        : {};
+const v = isEdit ? db.vlans[_vlanEditIdx] : {};
+
+
 
 const clientOpts =
 
@@ -6884,17 +7110,8 @@ ${String(v.client_id)==="-" ? "selected" : ""}>
   const typeOpts=VLAN_TYPES.map(t=>`<option value="${t}"${v.assignment_type===t?' selected':''}>${t}</option>`).join('');
   const svcOpts=VLAN_SERVICES.map(s=>`<option value="${s}"${v.service_category===s?' selected':''}>${s}</option>`).join('');
   const bngOpts='<option value="">— None —</option>'+BNG_CARDS.map(b=>`<option value="${b}"${v.bng_card===b?' selected':''}>${b}</option>`).join('');
-const cdnOpts =
-'<option value="">— None —</option>' +
-(Array.isArray(db.vlanCdnList) ? db.vlanCdnList : [])
-.map(c =>
-`
-<option value="${escAttr(c)}" ${v.cdn===c?'selected':''}>
-${escHtml(c)}
-</option>
-`
-)
-.join('');  const dspOpts =
+  const cdnOpts='<option value="">— None —</option>'+db.vlanCdnList.map(c=>`<option value="${escAttr(c)}"${v.cdn===c?' selected':''}>${escHtml(c)}</option>`).join('');
+  const dspOpts =
 '<option value="">— None —</option>' +
 
 db.dspList.map(d => {
@@ -8178,4 +8395,3 @@ function showLoading(on){document.getElementById('loading-overlay').classList.to
 // ============================================================
 if(window.location.search.includes('setup')||window.location.hash.includes('setup')){localStorage.removeItem('eb_api_url');API_URL='';}
 checkSetup();
-
